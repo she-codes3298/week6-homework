@@ -1,0 +1,123 @@
+<html>
+
+<head>
+    <title>weather api</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <style>
+        .format {
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+            padding: 40px 50px 40px 50px;
+            background: #a2a8d3;
+            max-width: 600px;
+        }
+
+        button {
+            display: block;
+            color: black;
+            margin: 0 auto;
+            background: #ffb5b5;
+        }
+
+        .column {
+            float: left;
+            width: 33.33%;
+        }
+
+        .row:after {
+            content: “”;
+            display: table;
+            clear: both;
+        }
+
+        ul {
+            padding: none;
+        }
+
+        li {
+            list-style-type: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="format">
+        <form id="currentTemp">
+            <input type="text" placeholder="enter the city" id="temperature" />
+            <input type="submit" placeholder="submit" />
+        </form>
+        <button>current location</button>
+        <h2></h2>
+        <h3></h3>
+        <h4></h4>
+        <div class="row"></div>
+        <ul>
+            <li>
+                <div class="column">Fri 12.00 ⛅ 36</div>
+            </li>
+            <li>
+                <div class="column">Fri 15.00 ⛅ 35</div>
+            </li>
+            <li>
+                <div class="column">Fri 18.00 😶‍🌫️ 33</div>
+            </li>
+            <li>
+                <div class="column">Fri 21.00 🥶 31</div>
+            </li>
+            <li>
+                <div class="column">Sat 0.00 ☀️ 30</div>
+            </li>
+            <li>
+                <div class="column">Sat 3.00 🫥 33</div>
+            </li>
+            <li>
+                <div class="column">Sat 6.00 ⛅ 35</div>
+            </li>
+            <li>
+                <div class="column">Sat 9.00 ⛅ 35</div>
+            </li>
+        </ul>
+    </div>
+    </div> <!-- Move the h3 element here -->
+    <script>
+        let city_name; // Declare the city_name variable outside the function
+
+        function displayTemp ( event ) {
+            event.preventDefault();
+            let showTemp = document.querySelector( "#temperature" );
+            let h2 = document.querySelector( "h2" );
+            h2.innerHTML = showTemp.value; // Corrected variable name
+            city_name = showTemp.value; // Assign the value to the city_name variable
+
+            const api_key = '1214a18dee310994f0be7d35dbbd0b27';
+
+            fetch( `https://api.openweathermap.org/data/2.5/weather?q=${ city_name }&appid=${ api_key }` )
+                .then( response => response.json() )
+                .then( data => {
+                    const temp = data.main.temp;
+                    let h3 = document.querySelector( "h3" );
+                    h3.innerHTML = ` ${ temp } K`;
+
+                } )
+                .catch( error => console.error( error ) );
+        }
+
+        let form = document.querySelector( "#currentTemp" );
+        form.addEventListener( "submit", displayTemp );
+        function currentLocation () {
+            navigator.geolocation.getCurrentPosition( handlePosition )
+        }
+        function handlePosition ( position ) {
+            console.log( position.coords.latitude );
+            console.log( position.coords.longitude );
+            let h4 = document.querySelector( "h4" );
+            h4.innerHTML = position.coords.latitude + "/" + position.coords.longitude;
+        }
+
+        let button = document.querySelector( "button" );
+        button.addEventListener( "click", currentLocation );
+    </script>
+</body>
+
+</html>
